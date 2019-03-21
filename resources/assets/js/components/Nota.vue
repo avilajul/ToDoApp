@@ -3,15 +3,15 @@
         <!-- Breadcrumb -->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">    
-                <a href="/">Escritorio</a>
+                <a href="/">Mis Notas</a>
             </li>
         </ol>
         <div class="container-fluid">
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Artículos
-                    <button type="button" @click="abrirModal('articulo','registrar')" class="btn btn-secondary">
+                    <i class="fa fa-align-justify"></i> Lista de Notas
+                    <button type="button" @click="abrirModal('nota','registrar')" class="btn btn-secondary">
                         <i class="icon-plus"></i>&nbsp;Nuevo
                     </button>
                 </div>
@@ -23,8 +23,8 @@
                                   <option value="nombre">Nombre</option>
                                   <option value="descripcion">Descripción</option>
                                 </select>
-                                <input type="text" v-model="buscar" @keyup.enter="listarArticulo(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                <button type="submit" @click="listarArticulo(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                <input type="text" v-model="buscar" @keyup.enter="listarNota(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                                <button type="submit" @click="listarNota(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -32,45 +32,37 @@
                         <thead>
                             <tr>
                                 <th>Opciones</th>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Categoría</th>
-                                <th>Precio de Venta</th>
-                                <th>Stock</th>
-                                <th>Descripción</th>
+                                <th>Descripción</th>                                
+                                <th>Categoría</th>                                
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="articulo in arrayArticulo" :key="articulo.id">
+                            <tr v-for="nota in arrayNotas" :key="nota.id">
                                 <td>
-                                    <button type="button" @click="abrirModal('articulo','actualizar', articulo)" class="btn btn-warning btn-sm">
+                                    <button type="button" @click="abrirModal('nota','actualizar', nota)" class="btn btn-warning btn-sm">
                                       <i class="icon-pencil"></i>
                                     </button> &nbsp;
-                                   <template v-if="articulo.condicion">
-                                       <button class="btn btn-danger btn-sm" @click="desactivarArticulo(articulo.id)">
+<!--                                    <template v-if="nota.condicion">
+                                       <button class="btn btn-danger btn-sm" @click="desactivarNota(nota.id)">
                                            <i class="icon-trash"></i>
                                        </button>                                       
                                    </template>
                                    <template v-else>
-                                       <button class="btn btn-danger btn-sm" @click="activarArticulo(articulo.id)">
+                                       <button class="btn btn-danger btn-sm" @click="activarNota(nota.id)">
                                            <i class="icon-check"></i>
                                        </button>                                       
-                                   </template>                                   
+                                   </template>    -->                                
                                 </td>
-                                <td v-text="articulo.codigo"></td>
-                                <td v-text="articulo.nombre"></td>
-                                <td v-text="articulo.nombre_categoria"></td>
-                                <td v-text="articulo.precio_venta"></td>
-                                <td v-text="articulo.stock"></td>
-                                <td v-text="articulo.descripcion"></td>
+                                <td v-text="nota.descripcion"></td>
+                                <td v-text="nota.nombre_categoria"></td>
                                 <td>
-                                    <div v-if="articulo.condicion">
+<!--                                     <div v-if="nota.condicion">
                                         <span class="badge badge-success">Activo</span>
                                     </div>
                                     <div v-else>
                                         <span class="badge badge-danger">Desactivado</span>
-                                    </div>                                    
+                                    </div>   -->                                  
                                 </td>
                             </tr>
                         </tbody>
@@ -145,17 +137,17 @@
                                     <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese Descripción">
                                 </div>
                             </div>
-                            <div v-show="errorArticulo" class="form-group row div-error">
+                            <div v-show="errorNota" class="form-group row div-error">
                                 <div class="text-center text-error">
-                                    <div v-for="error in errorMostrarMsjArticulo" :key="error" v-text="error"></div>
+                                    <div v-for="error in errorMostrarMsjNota" :key="error" v-text="error"></div>
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                        <button type="button" v-if="tipoAccion==1" @click="registrarArticulo()" class="btn btn-primary">Guardar</button>
-                        <button type="button" v-if="tipoAccion==2" @click="actualizarArticulo()" class="btn btn-primary">Actualizar</button>
+                        <button type="button" v-if="tipoAccion==1" @click="registrarNota()" class="btn btn-primary">Guardar</button>
+                        <button type="button" v-if="tipoAccion==2" @click="actualizarNota()" class="btn btn-primary">Actualizar</button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -167,24 +159,20 @@
 </template>
 
 <script>
-    import jsbarcode from 'jsbarcode'
     export default {
         data() { 
             return{
                 articulo_id: 0,
                 id_categoria: 0,
-                nombre_categoria: '',
-                codigo: '',                
-                nombre: '',
-                precio_venta: 0,
-                stock: 0,
+                nombre_categoria: '',                                
+                nombre: '',                
                 descripcion: '',
-                arrayArticulo: [],
+                arrayNotas: [],
                 modal: 0,
                 tituloModal: '',
                 tipoAccion: 0,
-                errorArticulo: 0,
-                errorMostrarMsjArticulo: [],
+                errorNota: 0,
+                errorMostrarMsjNota: [],
                 pagination : {
                     'total': 0,
                     'current_page': 0,
@@ -235,12 +223,12 @@
             }            
         },
         methods:{
-            listarArticulo(page, buscar, criterio){
+            listarNota(page, buscar, criterio){
                 let me = this;
-                var url = '/articulo?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+                var url = '/nota?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
                 axios.get(url).then(function(response){
                     var respuesta = response.data;
-                    me.arrayArticulo = respuesta.articulos.data;
+                    me.arrayNotas = respuesta.notas.data;
                     me.pagination = respuesta.pagination;                                        
                 })
                 .catch(function(error){
@@ -264,16 +252,16 @@
                 //Actualiza la página actual
                 me.pagination.current_page = page;
                 //Envía la petición para visualizar la data de esta página
-                me.listarArticulo(page,buscar,criterio);
+                me.listarNota(page,buscar,criterio);
             },
-            registrarArticulo(){
-                if(this.validarArticulo()){
+            registrarNota(){
+                if(this.validarNota()){
                     return;
                 }
 
                 let me = this;
 
-                axios.post('/articulo/registrar',{
+                axios.post('/nota/registrar',{
                     'id_categoria': this.id_categoria,
                     'codigo': this.codigo,
                     'nombre': this.nombre,
@@ -282,19 +270,19 @@
                     'descripcion': this.descripcion
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarArticulo(1,'','nombre');
+                    me.listarNota(1,'','nombre');
                 }).catch(function(error){
                     console.log(error);
                 });
             },
-            actualizarArticulo(){
-                if(this.validarArticulo()){
+            actualizarNota(){
+                if(this.validarNota()){
                     return;
                 }
 
                 let me = this;
 
-                axios.put('/articulo/actualizar',{
+                axios.put('/nota/actualizar',{
                     'id_categoria': this.id_categoria,
                     'codigo': this.codigo,
                     'nombre': this.nombre,
@@ -304,12 +292,12 @@
                     'id': this.articulo_id                    
                 }).then(function(response){                    
                     me.cerrarModal();
-                    me.listarArticulo(1,'','nombre');
+                    me.listarNota(1,'','nombre');
                 }).catch(function(error){
                     console.log(error);
                 });                
             },
-            activarArticulo(id){  
+            activarNota(id){  
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -327,10 +315,10 @@
                 if (result.value) {                    
                     let me = this;
 
-                    axios.put('/articulo/activar',{
+                    axios.put('/nota/activar',{
                         'id': id                    
                     }).then(function(response){
-                        me.listarArticulo(1,'','nombre');
+                        me.listarNota(1,'','nombre');
                         swalWithBootstrapButtons(
                         'Activado!',
                         'La artículo ha sido activado con éxito',
@@ -348,7 +336,7 @@
                 }
                 })                
             },            
-            desactivarArticulo(id){                
+            desactivarNota(id){                
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -366,10 +354,10 @@
                 if (result.value) {                    
                     let me = this;
 
-                    axios.put('/articulo/desactivar',{
+                    axios.put('/nota/desactivar',{
                         'id': id                    
                     }).then(function(response){
-                        me.listarArticulo(1,'','nombre');
+                        me.listarNota(1,'','nombre');
                         swalWithBootstrapButtons(
                         'Desactivado!',
                         'El artículo ha sido desactivado con éxito',
@@ -387,28 +375,28 @@
                 }
                 })                
             },
-            validarArticulo(){
-                this.errorArticulo = 0;
-                this.errorMostrarMsjArticulo = [];
+            validarNota(){
+                this.errorNota = 0;
+                this.errorMostrarMsjNota = [];
                 
                 if(this.id_categoria == 0){
-                    this.errorMostrarMsjArticulo.push("Selecciona una categoría.");
+                    this.errorMostrarMsjNota.push("Selecciona una categoría.");
                 }
                 if(!this.nombre){
-                    this.errorMostrarMsjArticulo.push("El nombre del artículo no puede estar vacío.");
+                    this.errorMostrarMsjNota.push("El nombre del artículo no puede estar vacío.");
                 }
                 if(!this.precio_venta){
-                    this.errorMostrarMsjArticulo.push("El precio de venta del artículo debe ser un número y no debe estar vacío.");
+                    this.errorMostrarMsjNota.push("El precio de venta del artículo debe ser un número y no debe estar vacío.");
                 }
                 if(!this.stock){
-                    this.errorMostrarMsjArticulo.push("El stock del artículo debe ser un número y no debe estar vacío.");
+                    this.errorMostrarMsjNota.push("El stock del artículo debe ser un número y no debe estar vacío.");
                 }
 
-                if(this.errorMostrarMsjArticulo.length){
-                    this.errorArticulo = 1;
+                if(this.errorMostrarMsjNota.length){
+                    this.errorNota = 1;
                 }
 
-                return this.errorArticulo;
+                return this.errorNota;
             },
             cerrarModal(){
                 this.modal = 0;
@@ -419,17 +407,17 @@
                 this.precio_venta = 0;
                 this.stock = 0;
                 this.descripcion = '';
-                this.errorArticulo = 0;
+                this.errorNota = 0;
             },            
             abrirModal(modelo, accion, data = []){
                 switch (modelo) {
-                    case "articulo":
+                    case "nota":
                     {
                         switch (accion) {
                             case "registrar":
                             {
                                 this.modal = 1;
-                                this.tituloModal = 'Registar Artículo';
+                                this.tituloModal = 'Registar Nota de Actividad';
                                 this.id_categoria = 0;
                                 this.nombre_categoria = '';
                                 this.nombre  ='';
@@ -443,7 +431,7 @@
                             case "actualizar":
                             {
                                 this.modal = 1;
-                                this.tituloModal = "Actualizar Artículo";
+                                this.tituloModal = "Actualizar Nota de Actividad";
                                 this.tipoAccion = 2;
                                 this.articulo_id = data['id'];
                                 this.id_categoria = data['id_categoria'];
@@ -458,79 +446,10 @@
                     }
                 }
                 this.selectCategoria();
-            },
-
-            /**
-             * Obtiene el código del articulo ingresado
-             * @param {void} no recibe parametro
-             * @returns {string} retorn una mensaje de acuerdo al código ingresado
-             */
-            getCodigo: function () {
-                    if(this.codigo.length == 0) {
-                        this.borrarCodigoBarras()
-                        return
-                    }                   
-
-                    if(this.validarCodigo(this.codigo)) {
-                        this.visible = ''
-                        this.visualizarCodigoBarrras()
-                    }
-                    else {
-                        this.borrarCodigoBarras();
-                    }
-                },
-
-                /**
-                 * Valida que el codigo ingresado corresponda al formato EAN13
-                 * @param {codigo} codigo del producto ingresado
-                 * @returns {boolean} retorna un valor boleano
-                 */
-                validarCodigo: function (codigo) {
-                    let codigo_inverso = codigo.substr(0,12);
-
-                    if(codigo_inverso.length === 12){
-                        var checksum = 0;
-                        codigo_inverso = codigo_inverso.split('').reverse();
-                        for(var pos in codigo_inverso){
-                            checksum += codigo_inverso[pos] * (3 - 2 * (pos % 2));
-                        }
-                        
-                        let numero_control = ((10 - (checksum % 10 )) % 10);
-
-                        let num_con = codigo.substr(-1,1);
-                        
-                        if(numero_control == num_con) {                           
-                            return true;
-                        }
-                    }
-                    else {
-                        return false;
-                    }
-                },
-
-                /**
-                 * Dibuja el codigo de barras
-                 * @param {void}
-                 * @return {void} 
-                 */
-                visualizarCodigoBarrras: function () {
-                    JsBarcode("#barcode", this.codigo, {
-                        height: 75,
-                        format:'EAN13'
-                        });
-                },
-                
-                /**
-                 * Borra el código de barras
-                 * @param {void}
-                 * @returns {void}
-                 */
-                borrarCodigoBarras: function () {
-                    this.visible = 'none';
-                }
+            }
         },
         mounted() {
-            this.listarArticulo(1,this.buscar,this.criterio);
+            this.listarNota(1,this.buscar,this.criterio);
         }
     }
 </script>

@@ -20,13 +20,13 @@ class NotaController extends Controller
         if($buscar == '')
         {
             $notas = Nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')
-            ->select('notas.id', 'notas.id_categoria', 'notas.codigo', 'notas.nombre', 'notas.nombre as nombre_categoria', 'notas.precio_venta', 'notas.stock', 'notas.descripcion', 'notas.condicion')
+            ->select('notas.id', 'notas.id_categoria', 'notas.descripcion', 'categorias.nombre as nombre_categoria')
             ->orderBy('notas.id','desc')->paginate(10);
         }
         else
         {
             $notas = nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')
-            ->select('notas.id', 'notas.id_categoria', 'notas.codigo', 'notas.nombre', 'notas.nombre as nombre_categoria', 'notas.precio_venta', 'notas.stock', 'notas.descripcion', 'notas.condicion')
+            ->select('notas.id', 'notas.id_categoria', 'notas.descripcion', 'categorias.nombre as nombre_categoria')
             ->where('notas.',$criterio,'like', '%'.$buscar.'%')
             ->orderBy('notas.id','desc')->paginate(10);
         }
@@ -57,13 +57,13 @@ class NotaController extends Controller
         if($buscar == '')
         {
             $notas = Nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')
-            ->select('notas.id', 'notas.id_categoria', 'notas.codigo', 'notas.nombre', 'notas.nombre as nombre_categoria', 'notas.precio_venta', 'notas.stock', 'notas.descripcion', 'notas.condicion')
+            ->select('notas.id', 'notas.id_categoria', 'notas.nombre', 'notas.nombre', 'notas.nombre as nombre_categoria', 'notas.precio_venta', 'notas.stock', 'notas.descripcion', 'notas.condicion')
             ->orderBy('notas.id','desc')->paginate(10);
         }
         else
         {
             $notas = Nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')
-            ->select('notas.id', 'notas.id_categoria', 'notas.codigo', 'notas.nombre', 'notas.nombre as nombre_categoria', 'notas.precio_venta', 'notas.stock', 'notas.descripcion', 'notas.condicion')
+            ->select('notas.id', 'notas.id_categoria', 'notas.nombre', 'notas.nombre', 'notas.nombre as nombre_categoria', 'notas.precio_venta', 'notas.stock', 'notas.descripcion', 'notas.condicion')
             ->where('notas.',$criterio,'like', '%'.$buscar.'%')
             ->orderBy('notas.id','desc')->paginate(10);
         }
