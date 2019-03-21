@@ -8,8 +8,8 @@ class Categoria extends Model
 {
     protected $fillable = ['nombre','descripcion','condicion'];
 
-    public function articulos()
+    public function notas()
     {
-        return $this->hasMany('App\Articulo');
+        return $this->hasMany('App\Nota');
     }
 }
