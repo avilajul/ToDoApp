@@ -48853,27 +48853,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            articulo_id: 0,
+            nota_id: 0,
             id_categoria: 0,
             nombre_categoria: '',
             nombre: '',
@@ -48986,15 +48970,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             var me = this;
+            var puta = this.nota_id;
+            console.log(puta);
 
             axios.put('/nota/actualizar', {
                 'id_categoria': this.id_categoria,
-                'codigo': this.codigo,
-                'nombre': this.nombre,
-                'precio_venta': this.precio_venta,
-                'stock': this.stock,
                 'descripcion': this.descripcion,
-                'id': this.articulo_id
+                'id': this.nota_id
             }).then(function (response) {
                 me.cerrarModal();
                 me.listarNota(1, '', 'nombre');
@@ -49002,7 +48984,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-        activarNota: function activarNota(id) {
+        borrarNota: function borrarNota(id) {
             var _this = this;
 
             var swalWithBootstrapButtons = swal.mixin({
@@ -49012,7 +48994,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
 
             swalWithBootstrapButtons({
-                title: '¿Está seguro de activar este artículo?',
+                title: '¿Está seguro de borrar esta Nota',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -49022,44 +49004,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (result.value) {
                     var me = _this;
 
-                    axios.put('/nota/activar', {
+                    axios.put('/nota/borrar', {
                         'id': id
                     }).then(function (response) {
                         me.listarNota(1, '', 'nombre');
-                        swalWithBootstrapButtons('Activado!', 'La artículo ha sido activado con éxito', 'success');
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        desactivarNota: function desactivarNota(id) {
-            var _this2 = this;
-
-            var swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false
-            });
-
-            swalWithBootstrapButtons({
-                title: '¿Está seguro de desactivar este artículo?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
-                    var me = _this2;
-
-                    axios.put('/nota/desactivar', {
-                        'id': id
-                    }).then(function (response) {
-                        me.listarNota(1, '', 'nombre');
-                        swalWithBootstrapButtons('Desactivado!', 'El artículo ha sido desactivado con éxito', 'success');
+                        swalWithBootstrapButtons('Borrado!', 'La nota ha sido borrada con éxito', 'success');
                     }).catch(function (error) {
                         console.log(error);
                     });
@@ -49114,7 +49063,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                                     this.modal = 1;
                                     this.tituloModal = "Actualizar Nota de Actividad";
                                     this.tipoAccion = 2;
-                                    this.actividad_id = data['id'];
+                                    this.nota_id = data['id'];
                                     this.id_categoria = data['id_categoria'];
                                     this.nombre = data['nombre'];
                                     this.descripcion = data['descripcion'];
@@ -49146,7 +49095,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Lista de Notas\n                    "),
+          _vm._v(" Lista de Notas\n                "),
           _c(
             "button",
             {
@@ -49160,7 +49109,7 @@ var render = function() {
             },
             [
               _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n                    ")
+              _vm._v(" Nuevo\n                ")
             ]
           )
         ]),
@@ -49266,6 +49215,14 @@ var render = function() {
                 "tbody",
                 _vm._l(_vm.arrayNotas, function(nota) {
                   return _c("tr", { key: nota.id }, [
+                    _c("td", {
+                      domProps: { textContent: _vm._s(nota.descripcion) }
+                    }),
+                    _vm._v(" "),
+                    _c("td", {
+                      domProps: { textContent: _vm._s(nota.nombre_categoria) }
+                    }),
+                    _vm._v(" "),
                     _c("td", [
                       _c(
                         "button",
@@ -49280,18 +49237,20 @@ var render = function() {
                         },
                         [_c("i", { staticClass: "icon-pencil" })]
                       ),
-                      _vm._v("  \n")
-                    ]),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(nota.descripcion) }
-                    }),
-                    _vm._v(" "),
-                    _c("td", {
-                      domProps: { textContent: _vm._s(nota.nombre_categoria) }
-                    }),
-                    _vm._v(" "),
-                    _c("td")
+                      _vm._v("  \n                                "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger btn-sm",
+                          on: {
+                            click: function($event) {
+                              _vm.borrarNota(nota.id)
+                            }
+                          }
+                        },
+                        [_c("i", { staticClass: "icon-trash" })]
+                      )
+                    ])
                   ])
                 })
               )
@@ -49639,13 +49598,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Opciones")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Descripción")]),
         _vm._v(" "),
         _c("th", [_vm._v("Categoría")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Estado")])
+        _c("th", [_vm._v("Opciones")])
       ])
     ])
   }

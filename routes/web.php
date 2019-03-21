@@ -28,12 +28,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['Usuario']], function () {
 
         Route::get('/nota', 'NotaController@index');
-        Route::get('/nota/buscarArticulo', 'NotaController@buscarNota');
+        Route::get('/nota/buscarNota', 'NotaController@buscarNota');
         Route::post('/nota/registrar', 'NotaController@store');
-        Route::get('/nota/listarArticulo', 'NotaController@listarNota');
-        Route::put('/nota/actualizar', 'NotaController@update');
-        Route::put('/nota/activar', 'NotaController@activar');
-        Route::put('/nota/desactivar', 'NotaController@desactivar');
+        Route::get('/nota/listarNota', 'NotaController@listarNota');
+        Route::put('/nota/actualizar', 'NotaController@modificarNota');
+        Route::put('/nota/borrar', 'NotaController@borrarNota');
 
         Route::get('/categoria', 'CategoriaController@index');
         Route::get('/categoria/selectCategoria', 'CategoriaController@selectCategoria');
@@ -45,26 +44,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/cliente', 'ClienteController@index');
         Route::post('/cliente/registrar', 'ClienteController@store');
         Route::put('/cliente/actualizar', 'ClienteController@update');
-        
-        
-/*         Route::get('/proveedor', 'ProveedorController@index');
-        Route::post('/proveedor/registrar', 'ProveedorController@store');
-        Route::put('/proveedor/actualizar', 'ProveedorController@update');
-        Route::get('/proveedor/selectProveedor', 'ProveedorController@selectProveedor');
-
-        Route::get('/ingreso', 'IngresoController@index');
-        Route::post('/ingreso/registrar', 'IngresoController@store');
-        Route::put('/ingreso/desactivar', 'IngresoController@desactivar');
-
-        Route::get('/rol', 'RolController@index');
-        Route::get('/rol/selectRol', 'RolController@selectRol');
-        
-        Route::get('/user', 'UserController@index');
-        Route::post('/user/registrar', 'UserController@store');
-        Route::put('/user/actualizar', 'UserController@update');
-        Route::put('/user/activar', 'UserController@activar');
-        Route::put('/user/desactivar', 'UserController@desactivar');   
-        */
     });
       
 });

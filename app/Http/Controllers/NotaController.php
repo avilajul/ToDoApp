@@ -94,7 +94,7 @@ class NotaController extends Controller
         $nota->save();
     }
 
-    public function update(Request $request)
+    public function modificarNota(Request $request)
     {
         if(!$request->ajax())
         {
@@ -102,12 +102,18 @@ class NotaController extends Controller
         }
         $nota = Nota::findOrFail($request->id);
         $nota->id_categoria  = $request->id_categoria;
-        $nota->codigo = $request->codigo;
-        $nota->nombre = $request->nombre;
-        $nota->precio_venta = $request->precio_venta;
-        $nota->stock = $request->stock;
         $nota->descripcion = $request->descripcion;
-        $nota->condicion = '1';
+
         $nota->save();
+    }
+
+    public function borrarNota(Request $request)
+    {
+        if(!$request->ajax())
+        {
+            return redirect('/');
+        }
+        $nota = Nota::findOrFail($request->id);
+        $nota->delete();
     }
 }
