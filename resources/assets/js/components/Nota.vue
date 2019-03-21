@@ -96,6 +96,13 @@
                     </div>
                     <div class="modal-body">
                         <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+                            <div class="form-group row">
+                                <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
+                                <div class="col-md-9">
+                                    <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese Descripción">
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label" for="text-input">Categoría</label>
                                 <div class="col-md-9">
@@ -103,38 +110,6 @@
                                         <option value="0" disabled>Seleccione</option>
                                         <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Código</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="codigo" class="form-control" placeholder="Código de barras">
-                                    
-                                     <svg id="barcode" v-bind:display="visible"></svg>         
-                                </div>
-                            </div>           
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de artículo">                                    
-                                </div>
-                            </div>       
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Precio Venta</label>
-                                <div class="col-md-9">
-                                    <input type="number" v-model="precio_venta" class="form-control" placeholder="">                                    
-                                </div>
-                            </div>            
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="text-input">Stock</label>
-                                <div class="col-md-9">
-                                    <input type="number" v-model="stock" class="form-control" placeholder="">                                    
-                                </div>
-                            </div>   
-                            <div class="form-group row">
-                                <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
-                                <div class="col-md-9">
-                                    <input type="text" v-model="descripcion" class="form-control" placeholder="Ingrese Descripción">
                                 </div>
                             </div>
                             <div v-show="errorNota" class="form-group row div-error">
@@ -263,11 +238,7 @@
 
                 axios.post('/nota/registrar',{
                     'id_categoria': this.id_categoria,
-                    'codigo': this.codigo,
-                    'nombre': this.nombre,
-                    'precio_venta': this.precio_venta,
-                    'stock': this.stock,
-                    'descripcion': this.descripcion
+                     'descripcion': this.descripcion                   
                 }).then(function(response){
                     me.cerrarModal();
                     me.listarNota(1,'','nombre');
@@ -382,14 +353,8 @@
                 if(this.id_categoria == 0){
                     this.errorMostrarMsjNota.push("Selecciona una categoría.");
                 }
-                if(!this.nombre){
-                    this.errorMostrarMsjNota.push("El nombre del artículo no puede estar vacío.");
-                }
-                if(!this.precio_venta){
-                    this.errorMostrarMsjNota.push("El precio de venta del artículo debe ser un número y no debe estar vacío.");
-                }
-                if(!this.stock){
-                    this.errorMostrarMsjNota.push("El stock del artículo debe ser un número y no debe estar vacío.");
+                if(!this.descripcion){
+                    this.errorMostrarMsjNota.push("Agrega una descripción a nota de actividad.");
                 }
 
                 if(this.errorMostrarMsjNota.length){
@@ -402,10 +367,6 @@
                 this.modal = 0;
                 this.tituloModal = '';
                 this.nombre_categoria  = '';
-                this.codigo = '';
-                this.nombre = '';
-                this.precio_venta = 0;
-                this.stock = 0;
                 this.descripcion = '';
                 this.errorNota = 0;
             },            
@@ -420,10 +381,7 @@
                                 this.tituloModal = 'Registar Nota de Actividad';
                                 this.id_categoria = 0;
                                 this.nombre_categoria = '';
-                                this.nombre  ='';
-                                this.precio_venta = 0;
-                                this.stock = 0;
-                                this.descripcion = '';
+                                this.descripcion  ='';
                                 this.tipoAccion = 1; 
                                 break;
 
@@ -433,12 +391,9 @@
                                 this.modal = 1;
                                 this.tituloModal = "Actualizar Nota de Actividad";
                                 this.tipoAccion = 2;
-                                this.articulo_id = data['id'];
-                                this.id_categoria = data['id_categoria'];
-                                this.codigo = data['codigo'];
+                                this.actividad_id = data['id'];
+                                this.id_categoria = data['id_categoria'];                                
                                 this.nombre = data['nombre'];
-                                this.precio_venta = data['precio_venta'];
-                                this.stock = data['stock'];
                                 this.descripcion = data['descripcion'];
                                 break;                                
                             }
