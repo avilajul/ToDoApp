@@ -30,39 +30,23 @@
                     </div>
                     <table class="table table-bordered table-striped table-sm">
                         <thead>
-                            <tr>
-                                <th>Opciones</th>
+                            <tr>                                
                                 <th>Descripción</th>                                
                                 <th>Categoría</th>                                
-                                <th>Estado</th>
+                                <th>Opciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="nota in arrayNotas" :key="nota.id">
+                                <td v-text="nota.descripcion"></td>
+                                <td v-text="nota.nombre_categoria"></td>
                                 <td>
                                     <button type="button" @click="abrirModal('nota','actualizar', nota)" class="btn btn-warning btn-sm">
                                       <i class="icon-pencil"></i>
                                     </button> &nbsp;
-<!--                                    <template v-if="nota.condicion">
-                                       <button class="btn btn-danger btn-sm" @click="desactivarNota(nota.id)">
-                                           <i class="icon-trash"></i>
-                                       </button>                                       
-                                   </template>
-                                   <template v-else>
-                                       <button class="btn btn-danger btn-sm" @click="activarNota(nota.id)">
-                                           <i class="icon-check"></i>
-                                       </button>                                       
-                                   </template>    -->                                
-                                </td>
-                                <td v-text="nota.descripcion"></td>
-                                <td v-text="nota.nombre_categoria"></td>
-                                <td>
-<!--                                     <div v-if="nota.condicion">
-                                        <span class="badge badge-success">Activo</span>
-                                    </div>
-                                    <div v-else>
-                                        <span class="badge badge-danger">Desactivado</span>
-                                    </div>   -->                                  
+                                    <button class="btn btn-danger btn-sm" @click="borrarNota(nota.id)">
+                                        <i class="icon-trash"></i>
+                                    </button>                           
                                 </td>
                             </tr>
                         </tbody>
@@ -137,7 +121,7 @@
     export default {
         data() { 
             return{
-                articulo_id: 0,
+                nota_id: 0,
                 id_categoria: 0,
                 nombre_categoria: '',                                
                 nombre: '',                
@@ -252,15 +236,13 @@
                 }
 
                 let me = this;
+                var puta = this.nota_id;
+                console.log(puta);
 
                 axios.put('/nota/actualizar',{
                     'id_categoria': this.id_categoria,
-                    'codigo': this.codigo,
-                    'nombre': this.nombre,
-                    'precio_venta': this.precio_venta,
-                    'stock': this.stock,
                     'descripcion': this.descripcion,
-                    'id': this.articulo_id                    
+                    'id': this.nota_id       
                 }).then(function(response){                    
                     me.cerrarModal();
                     me.listarNota(1,'','nombre');
@@ -268,7 +250,8 @@
                     console.log(error);
                 });                
             },
-            activarNota(id){  
+            
+            borrarNota(id){                
                 const swalWithBootstrapButtons = swal.mixin({
                 confirmButtonClass: 'btn btn-success',
                 cancelButtonClass: 'btn btn-danger',
@@ -276,7 +259,7 @@
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿Está seguro de activar este artículo?',                
+                title: '¿Está seguro de borrar esta Nota',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Aceptar',
@@ -286,52 +269,13 @@
                 if (result.value) {                    
                     let me = this;
 
-                    axios.put('/nota/activar',{
+                    axios.put('/nota/borrar',{
                         'id': id                    
                     }).then(function(response){
                         me.listarNota(1,'','nombre');
                         swalWithBootstrapButtons(
-                        'Activado!',
-                        'La artículo ha sido activado con éxito',
-                        'success'
-                        )                        
-                    }).catch(function(error){
-                        console.log(error);
-                    });                       
-
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
-
-                }
-                })                
-            },            
-            desactivarNota(id){                
-                const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                })
-
-                swalWithBootstrapButtons({
-                title: '¿Está seguro de desactivar este artículo?',                
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                reverseButtons: true
-                }).then((result) => {
-                if (result.value) {                    
-                    let me = this;
-
-                    axios.put('/nota/desactivar',{
-                        'id': id                    
-                    }).then(function(response){
-                        me.listarNota(1,'','nombre');
-                        swalWithBootstrapButtons(
-                        'Desactivado!',
-                        'El artículo ha sido desactivado con éxito',
+                        'Borrado!',
+                        'La nota ha sido borrada con éxito',
                         'success'
                         )                        
                     }).catch(function(error){
@@ -391,7 +335,7 @@
                                 this.modal = 1;
                                 this.tituloModal = "Actualizar Nota de Actividad";
                                 this.tipoAccion = 2;
-                                this.actividad_id = data['id'];
+                                this.nota_id = data['id'];
                                 this.id_categoria = data['id_categoria'];                                
                                 this.nombre = data['nombre'];
                                 this.descripcion = data['descripcion'];
