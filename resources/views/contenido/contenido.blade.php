@@ -4,13 +4,13 @@
     @if(Auth::check())
         @if(Auth::user()->id_rol == 1)
             <template v-if=menu==0>
-                <h1>Escritorio</h1>
+                    <nota></nota>
             </template>
             <template v-if=menu==1 >
                 <categoria></categoria>
             </template>
             <template v-if=menu==2>
-                <articulo></articulo>
+                <nota></nota>
             </template>
             <template v-if=menu==3>
                 <ingreso></ingreso>

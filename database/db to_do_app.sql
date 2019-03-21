@@ -19,3 +19,6 @@ INSERT INTO `categorias` (`id`, `nombre`, `condicion`, `created_at`, `updated_at
 (NULL, 'Viajes', 1, NULL, NULL),
 (NULL, 'Estudio', 1, NULL, NULL),
 (NULL, 'Compras', 1, NULL, NULL);
+
+INSERT INTO `notas` (`id`, `id_categoria`, `descripcion`, `created_at`, `updated_at`) 
+VALUES (NULL, '2', 'Prueba Técnica', NULL, NULL);

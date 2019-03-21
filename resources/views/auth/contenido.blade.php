@@ -5,11 +5,11 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Sistema Ventas Laravel Vue Js- IncanatoIT">
-  <meta name="author" content="Incanatoit.com">
-  <meta name="keyword" content="Sistema ventas Laravel Vue Js, Sistema compras Laravel Vue Js">
+  <meta name="description" content="Aplicación notas de actividades por hacer">
+  <meta name="keyword" content="ToDo App, notas de actividaes, Laravel Vue Js">
+  <link rel="shortcut icon" href="img/favicon.ico">
 
-  <title>Sistema Ventas - IncanatoIT</title>
+  <title>To Do App</title>
 
   <link href="css/plantilla.css" rel="stylesheet">
 
