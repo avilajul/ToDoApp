@@ -15,12 +15,10 @@ class CreateNotasTable extends Migration
     {
         Schema::create('notas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_usuario')->unsigned();
             $table->integer('id_categoria')->unsigned();
             $table->string('descripcion', 150);
             $table->timestamps();
             
-            $table->foreign('id_usuario')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_categoria')->references('id')->on('categorias')->onDelete('cascade');
         });
     }

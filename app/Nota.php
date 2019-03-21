@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Nota extends Model
 {
-    protected $fillable = ['id_usuario','id_categoria','descripcion'];
+    protected $fillable = ['id_categoria','descripcion'];
 
     public function categoria()
     {
