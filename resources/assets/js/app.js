@@ -15,14 +15,8 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('categoria', require('./components/Categoria.vue'));
 Vue.component('nota', require('./components/Nota.vue'));
 
-Vue.component('cliente', require('./components/Cliente.vue'));
-Vue.component('proveedor', require('./components/Proveedor.vue'));
-Vue.component('rol', require('./components/Rol.vue'));
-Vue.component('user', require('./components/User.vue'));
-Vue.component('ingreso', require('./components/Ingreso.vue'));
 
 const app = new Vue({
     el: '#app',
