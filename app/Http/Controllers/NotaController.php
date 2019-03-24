@@ -14,23 +14,10 @@ class NotaController extends Controller
             return redirect('/');
         }
 
-        $buscar = $request->buscar;
-        $criterio = $request->criterio;
+            $notas = nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')       
+                ->select('notas.id', 'notas.id_categoria', 'notas.descripcion', 'categorias.nombre as nombre_categoria')        
+                ->orderBy('notas.id','desc')->paginate(10);       
 
-        if($buscar == '')
-        {
-            $notas = Nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')
-            ->select('notas.id', 'notas.id_categoria', 'notas.descripcion', 'categorias.nombre as nombre_categoria')
-            ->orderBy('notas.id','desc')->paginate(10);
-        }
-        else
-        {
-            $notas = nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')
-            ->select('notas.id', 'notas.id_categoria', 'notas.descripcion', 'categorias.nombre as nombre_categoria')
-            ->where('notas.',$criterio,'like', '%'.$buscar.'%')
-            ->orderBy('notas.id','desc')->paginate(10);
-        }
-        
         return [
             'pagination' => [
                 'total'         => $notas->total(),
@@ -51,7 +38,7 @@ class NotaController extends Controller
             return redirect('/');
         }
 
-        $buscar = $request->buscar;
+        $buscar = $request->buscarC;
         $criterio = $request->criterio;
 
         if($buscar == '')
@@ -75,11 +62,24 @@ class NotaController extends Controller
     {
         if(!$request->ajax()) return redirect('/');
 
-        $filtro = $request->filtro;
-        $notas = Nota::where('codigo', '=', $filtro)
-        ->select('id', 'nombre')->orderBy('nombre', 'asc')->take(1)->get();
+        $buscar = $request->buscarC;
 
-        return ['notas' => $notas];
+        $notas = nota::join('categorias', 'notas.id_categoria', '=', 'categorias.id')
+        ->select('notas.id', 'notas.id_categoria', 'notas.descripcion', 'categorias.nombre as nombre_categoria')
+        ->where('categorias.id','=', $buscar)
+        ->orderBy('notas.id','desc')->paginate(10);
+
+        return [
+            'pagination' => [
+                'total'         => $notas->total(),
+                'current_page'  => $notas->currentPage(),
+                'per_page'      => $notas->perPage(),
+                'last_page'     => $notas->lastPage(),
+                'from'          => $notas->firstItem(),
+                'to'            => $notas->lastItem(),
+            ],
+            'notas' => $notas
+        ];
     }
 
     public function store(Request $request)

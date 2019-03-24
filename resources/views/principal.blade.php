@@ -13,6 +13,7 @@
     <title>To Do App</title>
     <!-- Icons -->
     <link href="css/plantilla.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
    
 </head>
 
@@ -60,13 +61,72 @@
     </div>   
     </div>
 
-    <!-- GenesisUI main scripts -->
+    <!-- scripts -->
     <script src="js/app.js"></script>
     <script src="js/plantilla.js"></script>
-    <script>        
+    
+    <script>
+
         $(document).ready(function(){
             $('.dropdown-toggle').dropdown();
-        });      
+            
+            //Envia una petición a la API através de Ajax
+            $('.nombre_categoria').keyup(function(){     
+                var sugerencia = $(this).val();
+                if(sugerencia != ''){
+                    $.ajax({
+                        
+                        url:"/categoria/buscarCategoria",                        
+                        method:"GET",
+                        data:{sugerencia:sugerencia},
+                        
+                        success:function(respuesta){
+
+                            // Se crea una lista con los items de la respusta Ajax
+                            var categoria = respuesta.categorias;
+                            if($.isEmptyObject(categoria)== false){
+
+                                
+                                var salida = '<ul class="dropdown-menu" style="display:block; position:relative">';
+                                
+                                for (let i = 0; i < categoria.length; i++) {
+                                    salida += "<li id="+categoria[i].id+"><a href='#'>"+categoria[i].nombre+"</a></li>";                              
+                                }
+                                salida += '</ul>';
+
+                                $('.lista_categorias').fadeIn();  
+                                $('.lista_categorias').html(salida); 
+                            }
+                            else{
+                                $('.lista_categorias').fadeOut();                                                                  
+                                $('.lista_categorias').html('');
+                            }
+                        }
+                    });
+                }
+                else{
+                    $('.lista_categorias').fadeOut();                    
+                    $('.lista_categorias').html('');
+                    $('.nombre_categoria').attr('name', '');
+                }
+                    
+            });
+
+            /* 
+            * Envia el objeto        
+            */
+            
+            $(document).on('click', 'li', function(){  
+                $('.nombre_categoria').val($(this).text());
+                $('.nombre_categoria').attr('name', this.id);  
+                $('.lista_categorias').fadeOut();  
+            });
+            $(document).on('click', 'buscar', function(){  
+                $('.nombre_categoria').val($(this).text());
+                $('.lista_categorias').fadeOut();  
+            });
+ 
+    });      
     </script>
 </body>
 
