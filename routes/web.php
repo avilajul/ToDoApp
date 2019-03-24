@@ -33,19 +33,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/nota/listarNota', 'NotaController@listarNota');
         Route::put('/nota/actualizar', 'NotaController@modificarNota');
         Route::put('/nota/borrar', 'NotaController@borrarNota');
+        
+        Route::get('/categoria/buscarCategoria', 'CategoriaController@buscarCategoria');
 
-        Route::get('/categoria', 'CategoriaController@index');
-        Route::get('/categoria/selectCategoria', 'CategoriaController@selectCategoria');
-        Route::post('/categoria/registrar', 'CategoriaController@store');
-        Route::put('/categoria/actualizar', 'CategoriaController@update');
-        Route::put('/categoria/activar', 'CategoriaController@activar');
-        Route::put('/categoria/desactivar', 'CategoriaController@desactivar');
-
-        Route::get('/cliente', 'ClienteController@index');
-        Route::post('/cliente/registrar', 'ClienteController@store');
-        Route::put('/cliente/actualizar', 'ClienteController@update');
     });
       
 });
-
-// Route::get('/home', 'HomeController@index')->name('home');

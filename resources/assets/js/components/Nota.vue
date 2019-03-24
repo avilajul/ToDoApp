@@ -16,54 +16,70 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <div class="form-group row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <select class="form-control col-md-3" v-model="criterio">
-                                  <option value="nombre">Nombre</option>
-                                  <option value="descripcion">Descripción</option>
-                                </select>
-                                <input type="text" v-model="buscar" @keyup.enter="listarNota(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                <button type="submit" @click="listarNota(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                    <div class="row">
+                        <div class="col-md-6 col-6">
+                            <!-- Buscador de Categorias Autocomplementable -->                            
+                            <input type="text" name="buscar" id="id_categoria" class="nombre_categoria form-control" placeholder="Ingresa el nombre de la categoría" />
+                            <div class="lista_categorias">
+                            </div>                            
+                        </div>
+                        <div class="col-md-6 col-6">
+                            <button type="submit" @click="buscarNotas(1,buscar)" class="buscar btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                            <button type="submit" @click="listarNotas(1,buscar)" class="buscar btn btn-primary">Ver todo</button>
+                        </div>                       
+                    </div>
+                    <template v-if="listado >= 1" >
+                    <div class="row">
+                        <div class="col-md-12 col-12">
+                            
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>                                
+                                    <th>Descripción</th>                                
+                                    <th>Categoría</th>                                
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="nota in arrayNotas" :key="nota.id">
+                                    <td v-text="nota.descripcion"></td>
+                                    <td v-text="nota.nombre_categoria"></td>
+                                    <td>
+                                        <button type="button" @click="abrirModal('nota','actualizar', nota)" class="btn btn-warning btn-sm">
+                                        <i class="icon-pencil"></i>
+                                        </button> &nbsp;
+                                        <button class="btn btn-danger btn-sm" @click="borrarNota(nota.id)">
+                                            <i class="icon-trash"></i>
+                                        </button>                           
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item" v-if="pagination.current_page > 1">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar)">Ant</a>
+                                </li>
+                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar)" v-text="page"></a>
+                                </li>
+                                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar)">Sig</a>
+                                </li>
+                            </ul>
+                        </nav>                            
+                        </div>
+                        
+                    </div>
+                    </template>
+                    <template v-else>
+                        <div class="row">
+                            <div class="alert alert-danger col md-4 col-4" role="alert">
+                                <strong>No se encontraron Notas de actividades!</strong>. Intentalo nuevamente.
                             </div>
                         </div>
-                    </div>
-                    <table class="table table-bordered table-striped table-sm">
-                        <thead>
-                            <tr>                                
-                                <th>Descripción</th>                                
-                                <th>Categoría</th>                                
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="nota in arrayNotas" :key="nota.id">
-                                <td v-text="nota.descripcion"></td>
-                                <td v-text="nota.nombre_categoria"></td>
-                                <td>
-                                    <button type="button" @click="abrirModal('nota','actualizar', nota)" class="btn btn-warning btn-sm">
-                                      <i class="icon-pencil"></i>
-                                    </button> &nbsp;
-                                    <button class="btn btn-danger btn-sm" @click="borrarNota(nota.id)">
-                                        <i class="icon-trash"></i>
-                                    </button>                           
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item" v-if="pagination.current_page > 1">
-                                <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">Ant</a>
-                            </li>
-                            <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
-                            </li>
-                            <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                            </li>
-                        </ul>
-                    </nav>
+                        
+                    </template>
                 </div>
             </div>
             <!-- Fin ejemplo de tabla Listado -->
@@ -89,7 +105,7 @@
                             </div>
                             <div class="form-group row">
                                 <label class="col-md-3 form-control-label" for="text-input">Categoría</label>
-                                <div class="col-md-9">
+                                <div class="col-md-9 col-12">
                                     <select class="form-control" v-model="id_categoria">
                                         <option value="0" disabled>Seleccione</option>
                                         <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
@@ -118,6 +134,9 @@
 </template>
 
 <script>
+
+import $ from 'jquery'
+
     export default {
         data() { 
             return{
@@ -141,17 +160,14 @@
                     'to': 0,
                 },
                 offset: 3,
-                criterio: 'nombre',
                 buscar: '',
                 arrayCategoria: [],
                 visible: 'none',
+                listado: 1
             }
         },
 
         watch: {
-            codigo: function() {
-                this.getCodigo()
-            }
         },        
    
         computed:{
@@ -182,21 +198,53 @@
             }            
         },
         methods:{
-            listarNota(page, buscar, criterio){
+            listarNotas(page, buscar){
                 let me = this;
-                var url = '/nota?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+                var listar = $('#id_categoria').attr('name');
+
+                if(buscar == 'buscar'){
+                    buscar = '';
+                }
+
+                var url = '/nota';
+                              
                 axios.get(url).then(function(response){
+                   // me.listado = 1;
                     var respuesta = response.data;
                     me.arrayNotas = respuesta.notas.data;
-                    me.pagination = respuesta.pagination;                                        
+                    me.pagination = respuesta.pagination;  
+                    me.listado = respuesta.pagination.total;                                      
                 })
                 .catch(function(error){
+                    me.pagination = 0;
                     console.log(error);
                 });
             },
-            selectCategoria(){
+            buscarNotas(page, buscar){
                 let me = this;
-                var url = '/categoria/selectCategoria';
+                var buscarC = $('#id_categoria').attr('name');
+
+                if(buscarC == 'buscar'){
+                    buscarC = '';
+                }
+
+                var url = '/nota/buscarNota?page=' + page + '&buscarC=' + buscarC;
+                              
+                axios.get(url).then(function(response){
+                   // me.listado = 1;
+                    var respuesta = response.data;
+                    me.arrayNotas = respuesta.notas.data;
+                    me.pagination = respuesta.pagination;
+                    me.listado = respuesta.pagination.total;                                
+                })
+                .catch(function(error){
+                    me.pagination = 0;
+                });
+                buscarC = '';
+            },            
+            buscarCategoria(){
+                let me = this;
+                var url = '/categoria/buscarCategoria?';
                 axios.get(url).then(function(response){
                     var respuesta = response.data;
                     me.arrayCategoria = respuesta.categorias;
@@ -206,12 +254,12 @@
                     console.log(error);
                 });
             },
-            cambiarPagina(page, buscar, criterio){
+            cambiarPagina(page, buscar){
                 let me = this;
                 //Actualiza la página actual
                 me.pagination.current_page = page;
                 //Envía la petición para visualizar la data de esta página
-                me.listarNota(page,buscar,criterio);
+                me.listarNotas(page,buscar);
             },
             registrarNota(){
                 if(this.validarNota()){
@@ -225,7 +273,7 @@
                      'descripcion': this.descripcion                   
                 }).then(function(response){
                     me.cerrarModal();
-                    me.listarNota(1,'','nombre');
+                    me.listarNotas(1,'');
                 }).catch(function(error){
                     console.log(error);
                 });
@@ -245,7 +293,7 @@
                     'id': this.nota_id       
                 }).then(function(response){                    
                     me.cerrarModal();
-                    me.listarNota(1,'','nombre');
+                    me.listarNotas(1,'','nombre');
                 }).catch(function(error){
                     console.log(error);
                 });                
@@ -272,7 +320,7 @@
                     axios.put('/nota/borrar',{
                         'id': id                    
                     }).then(function(response){
-                        me.listarNota(1,'','nombre');
+                        me.listarNotas(1,'','nombre');
                         swalWithBootstrapButtons(
                         'Borrado!',
                         'La nota ha sido borrada con éxito',
@@ -344,15 +392,18 @@
                         }
                     }
                 }
-                this.selectCategoria();
+                this.buscarCategoria();
             }
         },
         mounted() {
-            this.listarNota(1,this.buscar,this.criterio);
+            this.listarNotas(1,this.buscar);
         }
     }
 </script>
 <style>
+    select.form-control:not([size]):not([multiple]) {
+    height: calc(3.09375rem + 2px);
+}
     .modal-content{
         width: 100% !important;
         position: absolute !important;
