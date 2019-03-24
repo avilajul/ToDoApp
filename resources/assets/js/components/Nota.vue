@@ -10,7 +10,7 @@
             <!-- Ejemplo de tabla Listado -->
             <div class="card">
                 <div class="card-header">
-                    <i class="fa fa-align-justify"></i> Lista de Notas
+                    <i class="fa fa-align-justify"></i> Listado Notas de Actividades
                     <button type="button" @click="abrirModal('nota','registrar')" class="btn btn-secondary">
                         <i class="icon-plus"></i>&nbsp;Nuevo
                     </button>
@@ -209,7 +209,6 @@ import $ from 'jquery'
                 var url = '/nota';
                               
                 axios.get(url).then(function(response){
-                   // me.listado = 1;
                     var respuesta = response.data;
                     me.arrayNotas = respuesta.notas.data;
                     me.pagination = respuesta.pagination;  
@@ -231,7 +230,6 @@ import $ from 'jquery'
                 var url = '/nota/buscarNota?page=' + page + '&buscarC=' + buscarC;
                               
                 axios.get(url).then(function(response){
-                   // me.listado = 1;
                     var respuesta = response.data;
                     me.arrayNotas = respuesta.notas.data;
                     me.pagination = respuesta.pagination;
@@ -247,8 +245,7 @@ import $ from 'jquery'
                 var url = '/categoria/buscarCategoria?';
                 axios.get(url).then(function(response){
                     var respuesta = response.data;
-                    me.arrayCategoria = respuesta.categorias;
-                       
+                    me.arrayCategoria = respuesta.categorias;                       
                 })
                 .catch(function(error){
                     console.log(error);
@@ -284,8 +281,6 @@ import $ from 'jquery'
                 }
 
                 let me = this;
-                var puta = this.nota_id;
-                console.log(puta);
 
                 axios.put('/nota/actualizar',{
                     'id_categoria': this.id_categoria,
@@ -293,7 +288,7 @@ import $ from 'jquery'
                     'id': this.nota_id       
                 }).then(function(response){                    
                     me.cerrarModal();
-                    me.listarNotas(1,'','nombre');
+                    me.listarNotas(1,'','buscar');
                 }).catch(function(error){
                     console.log(error);
                 });                
@@ -301,42 +296,41 @@ import $ from 'jquery'
             
             borrarNota(id){                
                 const swalWithBootstrapButtons = swal.mixin({
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
+                    confirmButtonClass: 'btn btn-success',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
                 })
 
                 swalWithBootstrapButtons({
-                title: '¿Está seguro de borrar esta Nota',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                reverseButtons: true
+                    title: '¿Está seguro de borrar esta Nota?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Aceptar',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true
                 }).then((result) => {
-                if (result.value) {                    
-                    let me = this;
+                    if (result.value) {                    
+                        let me = this;
 
-                    axios.put('/nota/borrar',{
-                        'id': id                    
-                    }).then(function(response){
-                        me.listarNotas(1,'','nombre');
-                        swalWithBootstrapButtons(
-                        'Borrado!',
-                        'La nota ha sido borrada con éxito',
-                        'success'
-                        )                        
-                    }).catch(function(error){
-                        console.log(error);
-                    });                       
+                        axios.put('/nota/borrar',{
+                            'id': id                    
+                        }).then(function(response){
+                            me.listarNotas(1,'','buscar');
+                            swalWithBootstrapButtons(
+                            'Borrado!',
+                            'La nota ha sido borrada con éxito',
+                            'success'
+                            )                        
+                        }).catch(function(error){
+                            console.log(error);
+                        });                       
 
-                } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                ) {
+                    } else if (                    
+                        result.dismiss === swal.DismissReason.cancel
+                    ) {
 
-                }
-                })                
+                    }
+                })
             },
             validarNota(){
                 this.errorNota = 0;
